@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/devodev/go-office365/v0/pkg/office365/schema"
+	"github.com/orlangure/go-office365/schema"
 )
 
 func TestContent(t *testing.T) {
@@ -17,7 +17,7 @@ func TestContent(t *testing.T) {
 	client, mux, teardown := stubClient()
 	defer teardown()
 
-	now := time.Now()
+	now := time.Now().UTC()
 	nowMinusintervalOneDay := now.Add(-intervalOneDay)
 	contentID := "test-contentid"
 	contentURI := client.getURL(contentID, nil)
@@ -153,7 +153,9 @@ func TestContent(t *testing.T) {
 			w.Header().Set("NextPageUri", nextPageURI.String())
 		}
 
-		json.NewEncoder(w).Encode(response)
+		if err := json.NewEncoder(w).Encode(response); err != nil {
+			t.Fatal(err)
+		}
 	})
 
 	cases := []struct {

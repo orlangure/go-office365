@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/devodev/go-office365/v0/pkg/office365/schema"
+	"github.com/orlangure/go-office365/schema"
 )
 
 func TestList(t *testing.T) {
@@ -78,7 +78,9 @@ func TestStart(t *testing.T) {
 			}
 		}
 
-		json.NewEncoder(w).Encode(response)
+		if err := json.NewEncoder(w).Encode(response); err != nil {
+			t.Fatal(err)
+		}
 	})
 
 	cases := []struct {

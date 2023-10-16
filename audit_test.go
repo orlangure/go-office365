@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/devodev/go-office365/v0/pkg/office365/schema"
+	"github.com/orlangure/go-office365/schema"
 )
 
 func TestAudit(t *testing.T) {
@@ -45,7 +45,9 @@ func TestAudit(t *testing.T) {
 		contentID := tokens[len(tokens)-1]
 		response := filterStore(&store, contentID)
 
-		json.NewEncoder(w).Encode(response)
+		if err := json.NewEncoder(w).Encode(response); err != nil {
+			t.Fatal(err)
+		}
 	})
 
 	cases := []struct {

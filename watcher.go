@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/devodev/go-office365/v0/pkg/office365/schema"
+	"github.com/orlangure/go-office365/schema"
 	"github.com/sirupsen/logrus"
 )
 
@@ -150,11 +150,8 @@ func (s *SubscriptionWatcher) Run(ctx context.Context) error {
 	// this goroutine is responsible for notifying
 	// everyone that we want to exit
 	go func() {
-		select {
-		case <-ctx.Done():
-			close(done)
-			return
-		}
+		<-ctx.Done()
+		close(done)
 	}()
 
 	return s.Handler.Handle(out)
@@ -332,7 +329,7 @@ func (s *SubscriptionWatcher) getTimeWindow(requestTime, start, end time.Time) (
 		start = end.Add(-(lookbehindDelta))
 	case end.Before(requestTime):
 		// we have looped, adjust the end
-		end.Add(intervalOneDay)
+		end = end.Add(intervalOneDay)
 	case delta > intervalOneWeek:
 		// cant query API later than one week in the past
 		// move the interval window behind
