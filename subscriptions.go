@@ -33,9 +33,9 @@ func (s *SubscriptionService) List(ctx context.Context) (*Response, []Subscripti
 }
 
 // Start will start a subscription for the specified content type.
-// A payload can optionnaly be provided to enable a webhook
+// A payload can optionally be provided to enable a webhook
 // that will send notifications periodically about available content.
-// See below webhgook section for details.
+// See below webhook section for details.
 //
 // Microsoft API Reference: https://docs.microsoft.com/en-us/office/office-365-management-api/office-365-management-activity-api-reference#start-a-subscription
 //
@@ -62,7 +62,7 @@ func (s *SubscriptionService) Start(ctx context.Context, ct *schema.ContentType,
 
 	var payload io.Reader
 	if webhook != nil {
-		data, err := json.Marshal(webhook)
+		data, err := json.Marshal(map[string]any{"webhook": webhook})
 		if err != nil {
 			return nil, nil, err
 		}
@@ -72,6 +72,10 @@ func (s *SubscriptionService) Start(ctx context.Context, ct *schema.ContentType,
 	req, err := s.client.newRequest("POST", "subscriptions/start", params.Values, payload)
 	if err != nil {
 		return nil, nil, err
+	}
+
+	if webhook != nil {
+		req.Header.Set("Content-Type", "application/json; utf-8")
 	}
 
 	var out *Subscription
