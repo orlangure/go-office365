@@ -1,7 +1,5 @@
 package schema
 
-import "encoding/json"
-
 // ATP .
 type ATP struct {
 	AuditRecord
@@ -34,11 +32,6 @@ type AttachmentData struct {
 // FileVerdict .
 type FileVerdict int
 
-// MarshalJSON marshals into a string.
-func (t FileVerdict) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
-
 // FileVerdict enum.
 const (
 	Pending FileVerdict = iota - 3
@@ -61,11 +54,6 @@ func (t FileVerdict) String() string {
 
 // Policy .
 type Policy int
-
-// MarshalJSON marshals into a string.
-func (t Policy) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // Policy enum.
 const (
@@ -107,11 +95,6 @@ func (t Policy) String() string {
 
 // PolicyAction .
 type PolicyAction int
-
-// MarshalJSON marshals into a string.
-func (t PolicyAction) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // PolicyAction enum.
 const (
@@ -156,11 +139,6 @@ type URLTimeOfClickEvents struct {
 // URLClickAction .
 type URLClickAction int
 
-// MarshalJSON marshals into a string.
-func (t URLClickAction) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
-
 // URLClickAction enum.
 const (
 	Blockpage URLClickAction = iota + 2
@@ -202,11 +180,6 @@ type FileData struct {
 
 // SourceWorkload .
 type SourceWorkload int
-
-// MarshalJSON marshals into a string.
-func (t SourceWorkload) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // SourceWorkload enum.
 const (

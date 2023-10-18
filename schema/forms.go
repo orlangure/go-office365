@@ -1,7 +1,5 @@
 package schema
 
-import "encoding/json"
-
 // MicrosoftForms .
 type MicrosoftForms struct {
 	FormsUserTypes     []FormsUserTypes `json:"FormsUserTypes"`
@@ -14,11 +12,6 @@ type MicrosoftForms struct {
 
 // FormsUserTypes .
 type FormsUserTypes int
-
-// MarshalJSON marshals into a string.
-func (t FormsUserTypes) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // FormsUserTypes enum.
 const (
@@ -40,11 +33,6 @@ func (t FormsUserTypes) String() string {
 
 // FormTypes .
 type FormTypes int
-
-// MarshalJSON marshals into a string.
-func (t FormTypes) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // FormTypes enum.
 const (

@@ -1,7 +1,5 @@
 package schema
 
-import "encoding/json"
-
 // MicrosoftTeams .
 type MicrosoftTeams struct {
 	AuditRecord
@@ -32,11 +30,6 @@ type MicrosoftTeamsMember struct {
 // MemberRoleType  .
 type MemberRoleType int
 
-// MarshalJSON marshals into a string.
-func (t MemberRoleType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
-
 // MemberRoleType enum.
 const (
 	MemberRT MemberRoleType = iota
@@ -55,11 +48,6 @@ func (t MemberRoleType) String() string {
 
 // AddOnType  .
 type AddOnType int
-
-// MarshalJSON marshals into a string.
-func (t AddOnType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // AddOnType enum.
 const (

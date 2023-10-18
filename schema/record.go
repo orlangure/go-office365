@@ -26,11 +26,6 @@ type AuditRecord struct {
 // https://docs.microsoft.com/en-us/office/office-365-management-api/office-365-management-activity-api-schema#enum-auditlogrecordtype---type-edmint32
 type AuditLogRecordType int
 
-// MarshalJSON marshals an AuditLogRecordType into a string.
-func (t *AuditLogRecordType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
-
 // UnmarshalJSON unmarshals either a string or a int into an AuditLogRecordType.
 func (t *AuditLogRecordType) UnmarshalJSON(b []byte) error {
 	var raw json.RawMessage
@@ -226,11 +221,6 @@ func GetRecordType(s string) (*AuditLogRecordType, error) {
 // https://docs.microsoft.com/en-us/office/office-365-management-api/office-365-management-activity-api-schema#enum-user-type---type-edmint32
 type UserType int
 
-// MarshalJSON marshals into a string.
-func (t UserType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
-
 // UserType enum.
 const (
 	Regular UserType = iota
@@ -262,11 +252,6 @@ func (t UserType) String() string {
 // AuditLogScope identifies the scope of an AuditRecord.
 // https://docs.microsoft.com/en-us/office/office-365-management-api/office-365-management-activity-api-schema#auditlogscope
 type AuditLogScope int
-
-// MarshalJSON marshals into a string.
-func (s AuditLogScope) MarshalJSON() ([]byte, error) {
-	return json.Marshal(s.String())
-}
 
 // AuditLogScope enum.
 const (

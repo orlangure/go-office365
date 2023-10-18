@@ -1,9 +1,5 @@
 package schema
 
-import (
-	"encoding/json"
-)
-
 // ExchangeAdmin .
 type ExchangeAdmin struct {
 	AuditRecord
@@ -75,11 +71,6 @@ type ExchangeFolder struct {
 
 // LogonType .
 type LogonType int
-
-// MarshalJSON marshals into a string.
-func (t LogonType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // LogonType enum.
 const (

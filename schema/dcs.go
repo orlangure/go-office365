@@ -1,7 +1,5 @@
 package schema
 
-import "encoding/json"
-
 // DataCenterSecurityBase .
 type DataCenterSecurityBase struct {
 	DataCenterSecurityEventType DataCenterSecurityEventType `json:"DataCenterSecurityEventType"`
@@ -9,11 +7,6 @@ type DataCenterSecurityBase struct {
 
 // DataCenterSecurityEventType  .
 type DataCenterSecurityEventType int
-
-// MarshalJSON marshals into a string.
-func (t DataCenterSecurityEventType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // DataCenterSecurityEventType enum.
 const (

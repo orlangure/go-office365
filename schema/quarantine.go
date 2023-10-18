@@ -1,7 +1,5 @@
 package schema
 
-import "encoding/json"
-
 // Quarantine .
 type Quarantine struct {
 	AuditRecord
@@ -13,11 +11,6 @@ type Quarantine struct {
 
 // RequestType .
 type RequestType int
-
-// MarshalJSON marshals into a string.
-func (t RequestType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // RequestType enum.
 const (
@@ -41,11 +34,6 @@ func (t RequestType) String() string {
 
 // RequestSource .
 type RequestSource int
-
-// MarshalJSON marshals into a string.
-func (t RequestSource) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // RequestSource enum.
 const (

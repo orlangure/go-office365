@@ -1,7 +1,5 @@
 package schema
 
-import "encoding/json"
-
 // Sway .
 type Sway struct {
 	AuditRecord
@@ -16,11 +14,6 @@ type Sway struct {
 
 // ObjectType  .
 type ObjectType int
-
-// MarshalJSON marshals into a string.
-func (t ObjectType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // ObjectType  enum.
 const (
@@ -41,11 +34,6 @@ func (t ObjectType) String() string {
 // OperationResult  .
 type OperationResult int
 
-// MarshalJSON marshals into a string.
-func (t OperationResult) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
-
 // OperationResult  enum.
 const (
 	Succeeded OperationResult = iota
@@ -62,11 +50,6 @@ func (t OperationResult) String() string {
 
 // Endpoint  .
 type Endpoint int
-
-// MarshalJSON marshals into a string.
-func (t Endpoint) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // Endpoint  enum.
 const (
@@ -88,11 +71,6 @@ func (t Endpoint) String() string {
 
 // DeviceType  .
 type DeviceType int
-
-// MarshalJSON marshals into a string.
-func (t DeviceType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // DeviceType  enum.
 const (

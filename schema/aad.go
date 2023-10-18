@@ -1,7 +1,5 @@
 package schema
 
-import "encoding/json"
-
 // AzureActiveDirectoryBase .
 type AzureActiveDirectoryBase struct {
 	AzureActiveDirectoryEventType *AzureActiveDirectoryEventType `json:"AzureActiveDirectoryEventType"`
@@ -11,11 +9,6 @@ type AzureActiveDirectoryBase struct {
 
 // AzureActiveDirectoryEventType .
 type AzureActiveDirectoryEventType int
-
-// MarshalJSON marshals into a string.
-func (t AzureActiveDirectoryEventType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // AzureActiveDirectoryEventType enum.
 const (
@@ -60,11 +53,6 @@ type IdentityTypeValuePair struct {
 
 // IdentityType .
 type IdentityType int
-
-// MarshalJSON marshals into a string.
-func (t IdentityType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
-}
 
 // IdentityType enum.
 const (
