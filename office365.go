@@ -173,7 +173,9 @@ func (c *Client) do(ctx context.Context, req *http.Request, out interface{}) (*R
 		if decErr == io.EOF {
 			decErr = nil
 		}
-		err = decErr
+		if err == nil {
+			err = decErr
+		}
 	}
 	return response, err
 }
