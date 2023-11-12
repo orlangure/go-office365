@@ -86,6 +86,6 @@ func testError(t *testing.T, want interface{}, wantError error, gotError error) 
 func testDeep(t *testing.T, got, want interface{}) {
 	t.Helper()
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("got\n%v\nbut want\n%v", got, want)
+		t.Errorf("got\n%+v\nbut want\n%+v", got, want)
 	}
 }

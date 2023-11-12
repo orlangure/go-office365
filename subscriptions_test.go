@@ -53,14 +53,16 @@ func TestStart(t *testing.T) {
 		EnforceMethod(t, r, "POST")
 		contentType := EnforceAndReturnContentType(t, r)
 
-		var webhook *Webhook
+		var webhook struct {
+			Webhook *Webhook `json:"webhook"`
+		}
 		if err := json.NewDecoder(r.Body).Decode(&webhook); err != nil {
 			if err != io.EOF {
 				t.Errorf("error decoding body: %s", err)
 			}
 		}
-		if webhook != nil {
-			if webhook.Address == nil {
+		if webhook.Webhook != nil {
+			if webhook.Webhook.Address == nil {
 				t.Errorf("webhook.address is required")
 			}
 		}
@@ -69,12 +71,12 @@ func TestStart(t *testing.T) {
 			ContentType: &contentType,
 			Status:      String("enabled"),
 		}
-		if webhook != nil {
+		if webhook.Webhook != nil {
 			response.Webhook = &Webhook{
 				Status:     String("enabled"),
-				Address:    webhook.Address,
-				AuthID:     webhook.AuthID,
-				Expiration: webhook.Expiration,
+				Address:    webhook.Webhook.Address,
+				AuthID:     webhook.Webhook.AuthID,
+				Expiration: webhook.Webhook.Expiration,
 			}
 		}
 

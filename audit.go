@@ -91,11 +91,6 @@ func AddExtendedSchema(r *schema.AuditLogRecordType, raw json.RawMessage, data *
 			*data = d
 		}
 	case schema.ComplianceDLPSharePointType:
-	case schema.SwayType:
-		var d schema.Sway
-		if err := json.Unmarshal(raw, &d); err == nil {
-			*data = d
-		}
 	case schema.ComplianceDLPExchangeType:
 	case schema.SharePointSharingOperationType:
 		var d schema.SharepointSharing
@@ -152,11 +147,6 @@ func AddExtendedSchema(r *schema.AuditLogRecordType, raw json.RawMessage, data *
 		if err := json.Unmarshal(raw, &d); err == nil {
 			*data = d
 		}
-	case schema.ThreatIntelligenceURLType:
-		var d schema.URLTimeOfClickEvents
-		if err := json.Unmarshal(raw, &d); err == nil {
-			*data = d
-		}
 	case schema.SecurityComplianceInsightsType:
 	case schema.WorkplaceAnalyticsType:
 		var d schema.WorkplaceAnalytics
@@ -170,7 +160,6 @@ func AddExtendedSchema(r *schema.AuditLogRecordType, raw json.RawMessage, data *
 			*data = d
 		}
 	case schema.TeamsHealthcareType:
-	case schema.DataInsightsRestAPIAuditType:
 	case schema.SharePointListItemOperationType:
 		var d schema.SharepointBase
 		if err := json.Unmarshal(raw, &d); err == nil {
