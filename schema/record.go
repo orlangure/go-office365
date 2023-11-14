@@ -3,6 +3,7 @@ package schema
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 )
 
 // AuditRecord represents an event or action returned by Audit endpoint.
@@ -34,21 +35,31 @@ func (t *AuditLogRecordType) UnmarshalJSON(b []byte) error {
 	}
 
 	var i int
-	if err := json.Unmarshal(raw, &i); err != nil {
-		var s string
-		if err := json.Unmarshal(raw, &s); err != nil {
-			return err
-		}
-		tmp, err := GetRecordType(s)
-		if err != nil {
-			return err
-		}
+	if err := json.Unmarshal(raw, &i); err == nil {
+		tmp := AuditLogRecordType(i)
+		*t = tmp
+		return nil
+	}
+
+	// if not int, it has to be a string
+	var s string
+	if err := json.Unmarshal(raw, &s); err != nil {
+		return err
+	}
+
+	// if the string appears in the lookup table
+	if tmp, err := GetRecordType(s); err == nil {
 		*t = *tmp
 		return nil
 	}
-	tmp := AuditLogRecordType(i)
-	*t = tmp
-	return nil
+
+	// it's probably a number represented as string: try to parse it
+	if i, err := strconv.Atoi(s); err == nil {
+		tmp := AuditLogRecordType(i)
+		*t = tmp
+	}
+
+	return fmt.Errorf("unexpected audit log record type %s", string(b))
 }
 
 // AuditLogRecordType enum.
@@ -319,139 +330,140 @@ func (t AuditLogRecordType) String() string {
 	return literals[t]
 }
 
+var literals = map[string]AuditLogRecordType{
+	"ExchangeAdmin":                         ExchangeAdminType,
+	"ExchangeItem":                          ExchangeItemType,
+	"ExchangeItemGroup":                     ExchangeItemGroupType,
+	"SharePoint":                            SharePointType,
+	"SharePointFileOperation":               SharePointFileOperationType,
+	"OneDrive":                              OneDriveType,
+	"AzureActiveDirectory":                  AzureActiveDirectoryType,
+	"AzureActiveDirectoryAccountLogon":      AzureActiveDirectoryAccountLogonType,
+	"DataCenterSecurityCmdlet":              DataCenterSecurityCmdletType,
+	"ComplianceDLPSharePoint":               ComplianceDLPSharePointType,
+	"ComplianceDLPExchange":                 ComplianceDLPExchangeType,
+	"SharePointSharingOperation":            SharePointSharingOperationType,
+	"AzureActiveDirectoryStsLogon":          AzureActiveDirectoryStsLogonType,
+	"SkypeForBusinessPSTNUsage":             SkypeForBusinessPSTNUsageType,
+	"SkypeForBusinessUsersBlocked":          SkypeForBusinessUsersBlockedType,
+	"SecurityComplianceCenterEOPCmdlet":     SecurityComplianceCenterEOPCmdletType,
+	"ExchangeAggregatedOperation":           ExchangeAggregatedOperationType,
+	"PowerBIAudit":                          PowerBIAuditType,
+	"CRM":                                   CRMType,
+	"Yammer":                                YammerType,
+	"SkypeForBusinessCmdlets":               SkypeForBusinessCmdletsType,
+	"Discovery":                             DiscoveryType,
+	"MicrosoftTeams":                        MicrosoftTeamsType,
+	"ThreatIntelligence":                    ThreatIntelligenceType,
+	"MailSubmission":                        MailSubmissionType,
+	"MicrosoftFlow":                         MicrosoftFlowType,
+	"AeD":                                   AeDType,
+	"MicrosoftStream":                       MicrosoftStreamType,
+	"ComplianceDLPSharePointClassification": ComplianceDLPSharePointClassificationType,
+	"ThreatFinder":                          ThreatFinderType,
+	"Project":                               ProjectType,
+	"SharePointListOperation":               SharePointListOperationType,
+	"SharePointCommentOperation":            SharePointCommentOperationType,
+	"DataGovernance":                        DataGovernanceType,
+	"Kaizala":                               KaizalaType,
+	"SecurityComplianceAlerts":              SecurityComplianceAlertsType,
+	"ThreatIntelligenceUrl":                 ThreatIntelligenceUrlType,
+	"SecurityComplianceInsights":            SecurityComplianceInsightsType,
+	"MIPLabel":                              MIPLabelType,
+	"WorkplaceAnalytics":                    WorkplaceAnalyticsType,
+	"PowerAppsApp":                          PowerAppsAppType,
+	"PowerAppsPlan":                         PowerAppsPlanType,
+	"ThreatIntelligenceAtpContent":          ThreatIntelligenceAtpContentType,
+	"LabelContentExplorer":                  LabelContentExplorerType,
+	"TeamsHealthcare":                       TeamsHealthcareType,
+	"ExchangeItemAggregated":                ExchangeItemAggregatedType,
+	"HygieneEvent":                          HygieneEventType,
+	"DataInsightsRestApiAudit":              DataInsightsRestApiAuditType,
+	"InformationBarrierPolicyApplication":   InformationBarrierPolicyApplicationType,
+	"SharePointListItemOperation":           SharePointListItemOperationType,
+	"SharePointContentTypeOperation":        SharePointContentTypeOperationType,
+	"SharePointFieldOperation":              SharePointFieldOperationType,
+	"MicrosoftTeamsAdmin":                   MicrosoftTeamsAdminType,
+	"HRSignal":                              HRSignalType,
+	"MicrosoftTeamsDevice":                  MicrosoftTeamsDeviceType,
+	"MicrosoftTeamsAnalytics":               MicrosoftTeamsAnalyticsType,
+	"InformationWorkerProtection":           InformationWorkerProtectionType,
+	"Campaign":                              CampaignType,
+	"DLPEndpoint":                           DLPEndpointType,
+	"AirInvestigation":                      AirInvestigationType,
+	"Quarantine":                            QuarantineType,
+	"MicrosoftForms":                        MicrosoftFormsType,
+	"ApplicationAudit":                      ApplicationAuditType,
+	"ComplianceSupervisionExchange":         ComplianceSupervisionExchangeType,
+	"CustomerKeyServiceEncryption":          CustomerKeyServiceEncryptionType,
+	"OfficeNative":                          OfficeNativeType,
+	"MipAutoLabelSharePointItem":            MipAutoLabelSharePointItemType,
+	"MipAutoLabelSharePointPolicyLocation":  MipAutoLabelSharePointPolicyLocationType,
+	"MicrosoftTeamsShifts":                  MicrosoftTeamsShiftsType,
+	"MipAutoLabelExchangeItem":              MipAutoLabelExchangeItemType,
+	"CortanaBriefing":                       CortanaBriefingType,
+	"WDATPAlerts":                           WDATPAlertsType,
+	"SensitivityLabelPolicyMatch":           SensitivityLabelPolicyMatchType,
+	"SensitivityLabelAction":                SensitivityLabelActionType,
+	"SensitivityLabeledFileAction":          SensitivityLabeledFileActionType,
+	"AttackSim":                             AttackSimType,
+	"AirManualInvestigation":                AirManualInvestigationType,
+	"SecurityComplianceRBAC":                SecurityComplianceRBACType,
+	"UserTraining":                          UserTrainingType,
+	"AirAdminActionInvestigation":           AirAdminActionInvestigationType,
+	"MSTIC":                                 MSTICType,
+	"PhysicalBadgingSignal":                 PhysicalBadgingSignalType,
+	"AipDiscover":                           AipDiscoverType,
+	"AipSensitivityLabelAction":             AipSensitivityLabelActionType,
+	"AipProtectionAction":                   AipProtectionActionType,
+	"AipFileDeleted":                        AipFileDeletedType,
+	"AipHeartBeat":                          AipHeartBeatType,
+	"MCASAlerts":                            MCASAlertsType,
+	"OnPremisesFileShareScannerDlp":         OnPremisesFileShareScannerDlpType,
+	"OnPremisesSharePointScannerDlp":        OnPremisesSharePointScannerDlpType,
+	"ExchangeSearch":                        ExchangeSearchType,
+	"SharePointSearch":                      SharePointSearchType,
+	"PrivacyInsights":                       PrivacyInsightsType,
+	"MyAnalyticsSettings":                   MyAnalyticsSettingsType,
+	"SecurityComplianceUserChange":          SecurityComplianceUserChangeType,
+	"ComplianceDLPExchangeClassification":   ComplianceDLPExchangeClassificationType,
+	"MipExactDataMatch":                     MipExactDataMatchType,
+	"MS365DCustomDetection":                 MS365DCustomDetectionType,
+	"CoreReportingSettings":                 CoreReportingSettingsType,
+	"ComplianceConnector":                   ComplianceConnectorType,
+	"OMEPortal":                             OMEPortalType,
+	"DataShareOperation":                    DataShareOperationType,
+	"EduDataLakeDownloadOperation":          EduDataLakeDownloadOperationType,
+	"MicrosoftGraphDataConnectOperation":    MicrosoftGraphDataConnectOperationType,
+	"PowerPagesSite":                        PowerPagesSiteType,
+	"PlannerPlan":                           PlannerPlanType,
+	"PlannerCopyPlan":                       PlannerCopyPlanType,
+	"PlannerTask":                           PlannerTaskType,
+	"PlannerRoster":                         PlannerRosterType,
+	"PlannerPlanList":                       PlannerPlanListType,
+	"PlannerTaskList":                       PlannerTaskListType,
+	"PlannerTenantSettings":                 PlannerTenantSettingsType,
+	"ProjectForTheWebProject":               ProjectForTheWebProjectType,
+	"ProjectForTheWebTask":                  ProjectForTheWebTaskType,
+	"ProjectForTheWebRoadmap":               ProjectForTheWebRoadmapType,
+	"ProjectForTheWebRoadmapItem":           ProjectForTheWebRoadmapItemType,
+	"ProjectForTheWebProjectSettings":       ProjectForTheWebProjectSettingsType,
+	"ProjectForTheWebRoadmapSettings":       ProjectForTheWebRoadmapSettingsType,
+	"MicrosoftTodoAudit":                    MicrosoftTodoAuditType,
+	"VivaGoals":                             VivaGoalsType,
+	"MicrosoftGraphDataConnectConsent":      MicrosoftGraphDataConnectConsentType,
+	"AttackSimAdmin":                        AttackSimAdminType,
+	"TeamsUpdates":                          TeamsUpdatesType,
+	"DefenderExpertsforXDRAdmin":            DefenderExpertsforXDRAdminType,
+	"PlannerRosterSensitivityLabel":         PlannerRosterSensitivityLabelType,
+	"VfamCreatePolicy":                      VfamCreatePolicyType,
+	"VfamUpdatePolicy":                      VfamUpdatePolicyType,
+	"VfamDeletePolicy":                      VfamDeletePolicyType,
+	"CopilotInteraction":                    CopilotInteractionType,
+}
+
 // GetRecordType returns the RecordType for the provided string.
 func GetRecordType(s string) (*AuditLogRecordType, error) {
-	literals := map[string]AuditLogRecordType{
-		"ExchangeAdmin":                         ExchangeAdminType,
-		"ExchangeItem":                          ExchangeItemType,
-		"ExchangeItemGroup":                     ExchangeItemGroupType,
-		"SharePoint":                            SharePointType,
-		"SharePointFileOperation":               SharePointFileOperationType,
-		"OneDrive":                              OneDriveType,
-		"AzureActiveDirectory":                  AzureActiveDirectoryType,
-		"AzureActiveDirectoryAccountLogon":      AzureActiveDirectoryAccountLogonType,
-		"DataCenterSecurityCmdlet":              DataCenterSecurityCmdletType,
-		"ComplianceDLPSharePoint":               ComplianceDLPSharePointType,
-		"ComplianceDLPExchange":                 ComplianceDLPExchangeType,
-		"SharePointSharingOperation":            SharePointSharingOperationType,
-		"AzureActiveDirectoryStsLogon":          AzureActiveDirectoryStsLogonType,
-		"SkypeForBusinessPSTNUsage":             SkypeForBusinessPSTNUsageType,
-		"SkypeForBusinessUsersBlocked":          SkypeForBusinessUsersBlockedType,
-		"SecurityComplianceCenterEOPCmdlet":     SecurityComplianceCenterEOPCmdletType,
-		"ExchangeAggregatedOperation":           ExchangeAggregatedOperationType,
-		"PowerBIAudit":                          PowerBIAuditType,
-		"CRM":                                   CRMType,
-		"Yammer":                                YammerType,
-		"SkypeForBusinessCmdlets":               SkypeForBusinessCmdletsType,
-		"Discovery":                             DiscoveryType,
-		"MicrosoftTeams":                        MicrosoftTeamsType,
-		"ThreatIntelligence":                    ThreatIntelligenceType,
-		"MailSubmission":                        MailSubmissionType,
-		"MicrosoftFlow":                         MicrosoftFlowType,
-		"AeD":                                   AeDType,
-		"MicrosoftStream":                       MicrosoftStreamType,
-		"ComplianceDLPSharePointClassification": ComplianceDLPSharePointClassificationType,
-		"ThreatFinder":                          ThreatFinderType,
-		"Project":                               ProjectType,
-		"SharePointListOperation":               SharePointListOperationType,
-		"SharePointCommentOperation":            SharePointCommentOperationType,
-		"DataGovernance":                        DataGovernanceType,
-		"Kaizala":                               KaizalaType,
-		"SecurityComplianceAlerts":              SecurityComplianceAlertsType,
-		"ThreatIntelligenceUrl":                 ThreatIntelligenceUrlType,
-		"SecurityComplianceInsights":            SecurityComplianceInsightsType,
-		"MIPLabel":                              MIPLabelType,
-		"WorkplaceAnalytics":                    WorkplaceAnalyticsType,
-		"PowerAppsApp":                          PowerAppsAppType,
-		"PowerAppsPlan":                         PowerAppsPlanType,
-		"ThreatIntelligenceAtpContent":          ThreatIntelligenceAtpContentType,
-		"LabelContentExplorer":                  LabelContentExplorerType,
-		"TeamsHealthcare":                       TeamsHealthcareType,
-		"ExchangeItemAggregated":                ExchangeItemAggregatedType,
-		"HygieneEvent":                          HygieneEventType,
-		"DataInsightsRestApiAudit":              DataInsightsRestApiAuditType,
-		"InformationBarrierPolicyApplication":   InformationBarrierPolicyApplicationType,
-		"SharePointListItemOperation":           SharePointListItemOperationType,
-		"SharePointContentTypeOperation":        SharePointContentTypeOperationType,
-		"SharePointFieldOperation":              SharePointFieldOperationType,
-		"MicrosoftTeamsAdmin":                   MicrosoftTeamsAdminType,
-		"HRSignal":                              HRSignalType,
-		"MicrosoftTeamsDevice":                  MicrosoftTeamsDeviceType,
-		"MicrosoftTeamsAnalytics":               MicrosoftTeamsAnalyticsType,
-		"InformationWorkerProtection":           InformationWorkerProtectionType,
-		"Campaign":                              CampaignType,
-		"DLPEndpoint":                           DLPEndpointType,
-		"AirInvestigation":                      AirInvestigationType,
-		"Quarantine":                            QuarantineType,
-		"MicrosoftForms":                        MicrosoftFormsType,
-		"ApplicationAudit":                      ApplicationAuditType,
-		"ComplianceSupervisionExchange":         ComplianceSupervisionExchangeType,
-		"CustomerKeyServiceEncryption":          CustomerKeyServiceEncryptionType,
-		"OfficeNative":                          OfficeNativeType,
-		"MipAutoLabelSharePointItem":            MipAutoLabelSharePointItemType,
-		"MipAutoLabelSharePointPolicyLocation":  MipAutoLabelSharePointPolicyLocationType,
-		"MicrosoftTeamsShifts":                  MicrosoftTeamsShiftsType,
-		"MipAutoLabelExchangeItem":              MipAutoLabelExchangeItemType,
-		"CortanaBriefing":                       CortanaBriefingType,
-		"WDATPAlerts":                           WDATPAlertsType,
-		"SensitivityLabelPolicyMatch":           SensitivityLabelPolicyMatchType,
-		"SensitivityLabelAction":                SensitivityLabelActionType,
-		"SensitivityLabeledFileAction":          SensitivityLabeledFileActionType,
-		"AttackSim":                             AttackSimType,
-		"AirManualInvestigation":                AirManualInvestigationType,
-		"SecurityComplianceRBAC":                SecurityComplianceRBACType,
-		"UserTraining":                          UserTrainingType,
-		"AirAdminActionInvestigation":           AirAdminActionInvestigationType,
-		"MSTIC":                                 MSTICType,
-		"PhysicalBadgingSignal":                 PhysicalBadgingSignalType,
-		"AipDiscover":                           AipDiscoverType,
-		"AipSensitivityLabelAction":             AipSensitivityLabelActionType,
-		"AipProtectionAction":                   AipProtectionActionType,
-		"AipFileDeleted":                        AipFileDeletedType,
-		"AipHeartBeat":                          AipHeartBeatType,
-		"MCASAlerts":                            MCASAlertsType,
-		"OnPremisesFileShareScannerDlp":         OnPremisesFileShareScannerDlpType,
-		"OnPremisesSharePointScannerDlp":        OnPremisesSharePointScannerDlpType,
-		"ExchangeSearch":                        ExchangeSearchType,
-		"SharePointSearch":                      SharePointSearchType,
-		"PrivacyInsights":                       PrivacyInsightsType,
-		"MyAnalyticsSettings":                   MyAnalyticsSettingsType,
-		"SecurityComplianceUserChange":          SecurityComplianceUserChangeType,
-		"ComplianceDLPExchangeClassification":   ComplianceDLPExchangeClassificationType,
-		"MipExactDataMatch":                     MipExactDataMatchType,
-		"MS365DCustomDetection":                 MS365DCustomDetectionType,
-		"CoreReportingSettings":                 CoreReportingSettingsType,
-		"ComplianceConnector":                   ComplianceConnectorType,
-		"OMEPortal":                             OMEPortalType,
-		"DataShareOperation":                    DataShareOperationType,
-		"EduDataLakeDownloadOperation":          EduDataLakeDownloadOperationType,
-		"MicrosoftGraphDataConnectOperation":    MicrosoftGraphDataConnectOperationType,
-		"PowerPagesSite":                        PowerPagesSiteType,
-		"PlannerPlan":                           PlannerPlanType,
-		"PlannerCopyPlan":                       PlannerCopyPlanType,
-		"PlannerTask":                           PlannerTaskType,
-		"PlannerRoster":                         PlannerRosterType,
-		"PlannerPlanList":                       PlannerPlanListType,
-		"PlannerTaskList":                       PlannerTaskListType,
-		"PlannerTenantSettings":                 PlannerTenantSettingsType,
-		"ProjectForTheWebProject":               ProjectForTheWebProjectType,
-		"ProjectForTheWebTask":                  ProjectForTheWebTaskType,
-		"ProjectForTheWebRoadmap":               ProjectForTheWebRoadmapType,
-		"ProjectForTheWebRoadmapItem":           ProjectForTheWebRoadmapItemType,
-		"ProjectForTheWebProjectSettings":       ProjectForTheWebProjectSettingsType,
-		"ProjectForTheWebRoadmapSettings":       ProjectForTheWebRoadmapSettingsType,
-		"MicrosoftTodoAudit":                    MicrosoftTodoAuditType,
-		"VivaGoals":                             VivaGoalsType,
-		"MicrosoftGraphDataConnectConsent":      MicrosoftGraphDataConnectConsentType,
-		"AttackSimAdmin":                        AttackSimAdminType,
-		"TeamsUpdates":                          TeamsUpdatesType,
-		"DefenderExpertsforXDRAdmin":            DefenderExpertsforXDRAdminType,
-		"PlannerRosterSensitivityLabel":         PlannerRosterSensitivityLabelType,
-		"VfamCreatePolicy":                      VfamCreatePolicyType,
-		"VfamUpdatePolicy":                      VfamUpdatePolicyType,
-		"VfamDeletePolicy":                      VfamDeletePolicyType,
-		"CopilotInteraction":                    CopilotInteractionType,
-	}
 	t, ok := literals[s]
 	if !ok {
 		return nil, fmt.Errorf("record type %s invalid", s)
