@@ -57,6 +57,7 @@ func (t *AuditLogRecordType) UnmarshalJSON(b []byte) error {
 	if i, err := strconv.Atoi(s); err == nil {
 		tmp := AuditLogRecordType(i)
 		*t = tmp
+		return nil
 	}
 
 	return fmt.Errorf("unexpected audit log record type %s", string(b))
